@@ -1,0 +1,30 @@
+{
+  "name": "agitprop",
+  "version": "0.1.0",
+  "description": "REST client",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine ./tests/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/garymcleanhall/agitprop.git"
+  },
+  "keywords": [
+    "REST",
+    "client",
+    "RESTful",
+    "microservice",
+    "api",
+    "agitprop"
+  ],
+  "author": "Gary McLean Hall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/garymcleanhall/agitprop/issues"
+  },
+  "homepage": "https://github.com/garymcleanhall/agitprop#readme",
+  "devDependencies": {
+    "jasmine": "^2.6.0"
+  }
+}
