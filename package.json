@@ -4,7 +4,7 @@
   "description": "REST client",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine ./tests/*"
+    "test": "node_modules/.bin/jasmine ./tests/*"
   },
   "repository": {
     "type": "git",
