@@ -3,12 +3,15 @@
 const express = require('express')
 const { links, link } = require('../')
 const uuid = require('uuid')
+const bodyParser = require('body-parser')
 
 const app = express()
+app.use(bodyParser.json())
 
 const uris = {
   a: `/${uuid()}`,
-  b: `/${uuid()}`
+  b: `/${uuid()}`,
+  c: `/${uuid()}`,
 }
 
 app.get('/', (request, response) => {
@@ -28,7 +31,8 @@ app.get(uris.a, (request, response) => {
     .json({
       links: links(
         link('self', 'http://localhost:3333'+uris.a),
-        link('then:here', 'http://localhost:3333'+uris.b)
+        link('then:here', 'http://localhost:3333'+uris.b),
+        link('then:post', 'http://localhost:3333'+uris.c, 'POST')
       )
     })
 })
@@ -38,6 +42,14 @@ app.get(uris.b, (request, response) => {
     .status(200)
     .json({
       foo: 'bar'
+    })
+})
+
+app.post(uris.c, (request, response) => {
+  response
+    .status(200)
+    .json({
+      request: request.body
     })
 })
 

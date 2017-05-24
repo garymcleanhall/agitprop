@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/garymcleanhall/agitprop#readme",
   "devDependencies": {
+    "body-parser": "^1.17.2",
     "jasmine": "^2.6.0",
     "uuid": "^3.0.1"
   },
