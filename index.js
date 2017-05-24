@@ -28,6 +28,7 @@ async function _request(opts) {
   } else {
     options = Object.assign(opts, options)
   }
+  options.uri = _uriInterceptor(options.uri)
   return await request(options)
 }
 
@@ -59,8 +60,17 @@ async function _next(response, [current, ...next]) {
   }
 }
 
+let _uriInterceptor = function(uri) {
+  return uri
+}
+
+function _setUriInterceptor(interceptor) {
+  _uriInterceptor = interceptor
+}
+
 module.exports = {
   link: _link,
   links: _links,
-  rest: _rest
+  rest: _rest,
+  setUriInterceptor: _setUriInterceptor
 }

@@ -1,6 +1,6 @@
 'use strict'
 
-const { rest } = require('../')
+let { rest, setUriInterceptor } = require('../')
 const service = require('./service')
 const HttpStatus = require('http-status')
 const uuid = require('uuid')
@@ -33,6 +33,20 @@ describe('Rest client', () => {
 
     expect(response.statusCode).toEqual(HttpStatus.OK)
     expect(response.body).toEqual({ request: requestBody })
+  }))
+
+  it('allows interception of uri', testAsync(async () => {
+    await service.start()  
+    let calls = 0
+    const uriInterceptor = (uri) => {
+      calls++
+      return uri
+    }
+    setUriInterceptor(uriInterceptor)
+    const response = await rest('http://localhost:3333/', 'go:here')
+    await service.stop()
+
+    expect(calls).toEqual(2)
   }))
 
 })
