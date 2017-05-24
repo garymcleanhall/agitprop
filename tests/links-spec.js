@@ -1,6 +1,6 @@
 'use strict'
 
-const { links, link } = require('../')
+const { links, link, setUriInterceptor } = require('../')
 
 describe('Links', () => {
   
@@ -43,6 +43,30 @@ describe('Links', () => {
         method: 'POST'
       }
     }
+    expect(actual).toEqual(expected)
+  })
+
+  it('allows interception of the relative uri for each link', () => {
+    setUriInterceptor(uri => {
+      return `hello_${uri}`
+    })
+
+    const actual = links(
+      link('self', '/'),
+      link('other', '/yeah_boiii')
+    )
+
+    const expected = {
+      self: {
+        uri: 'hello_/',
+        method: 'GET'
+      },
+      other: {
+        uri: 'hello_/yeah_boiii',
+        method: 'GET'
+      }
+    }
+
     expect(actual).toEqual(expected)
   })
 

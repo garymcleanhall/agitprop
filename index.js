@@ -5,7 +5,7 @@ const request = require('request-promise')
 function _link(relationship, uri, method = 'GET') {
   return {
     rel: relationship,
-    uri,
+    uri: _uriInterceptor(uri),
     method
   }
 }
@@ -28,7 +28,6 @@ async function _request(opts) {
   } else {
     options = Object.assign(opts, options)
   }
-  options.uri = _uriInterceptor(options.uri)
   return await request(options)
 }
 
