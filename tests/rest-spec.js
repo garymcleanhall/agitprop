@@ -55,4 +55,13 @@ describe('Rest client', () => {
     expect(calls).toBeGreaterThan(0)
   }))
 
+  it('transforms templated uris', testAsync(async () => {
+    await service.start()
+    const response = await (rest('http://localhost:3333/', { 'with:template': { __template: { name: 'Hello' }  } }))
+    await service.stop()
+
+    expect(response.statusCode).toEqual(HttpStatus.OK)
+    expect(response.body).toEqual({ name: 'Hello' })
+  }))
+
 })

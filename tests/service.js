@@ -12,6 +12,7 @@ const uris = {
   a: `/${uuid()}`,
   b: `/${uuid()}`,
   c: `/${uuid()}`,
+  d: `/${uuid()}/:name`
 }
 
 app.get('/', (request, response) => {
@@ -20,7 +21,8 @@ app.get('/', (request, response) => {
     .json({
       links: links(
         link('self', 'http://localhost:3333/'),
-        link('go:here', 'http://localhost:3333'+uris.a)
+        link('go:here', 'http://localhost:3333'+uris.a),
+        link('with:template', 'http://localhost:3333'+uris.d)
       )
     })
 })
@@ -50,6 +52,14 @@ app.post(uris.c, (request, response) => {
     .status(200)
     .json({
       request: request.body
+    })
+})
+
+app.get(uris.d, (request, response) => {
+  response
+    .status(200)
+    .json({
+      name: request.params.name
     })
 })
 

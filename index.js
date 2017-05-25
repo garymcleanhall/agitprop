@@ -47,16 +47,31 @@ async function _next(response, [current, ...next]) {
   if(!matchingLink) {
     throw `Link not found: '${relationship}' - ${JSON.stringify(response.body)}`
   }
+  let uri = matchingLink.uri
+  if(payload) {
+    uri = _transformUri(uri, payload.__template)
+  }
   if(matchingLink.method === 'GET') {
-    return await _next(await _request(matchingLink.uri), next)
+    return await _next(await _request(uri), next)
   } else {
+    delete payload.__template
     return await _next(await _request({
-      uri: matchingLink.uri,
+      uri: uri,
       method: matchingLink.method,
       json: true,
       body: payload
     }), next)
   }
+}
+
+function _transformUri(uri, parameters) {
+  if(parameters === null || parameters === undefined) {
+    return uri
+  }
+  const transformed = Object.keys(parameters).reduce((accumulator, current) => {
+    return accumulator.replace(`:${current}`, parameters[current])
+  }, uri)
+  return transformed
 }
 
 let _uriInterceptor = function(uri) {
