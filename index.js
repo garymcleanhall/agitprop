@@ -21,6 +21,10 @@ async function _rest(uri,...relations)  {
   return await _next(await _request(uri), relations)
 }
 
+async function _follow(response, ...relations) {
+  return await _next(response, relations)
+}
+
 async function _request(opts) {
   let options = { simple: false, resolveWithFullResponse: true, json: true }
   if(typeof(opts) === 'string') {
@@ -86,5 +90,6 @@ module.exports = {
   link: _link,
   links: _links,
   rest: _rest,
+  follow: _follow,
   setUriInterceptor: _setUriInterceptor
 }

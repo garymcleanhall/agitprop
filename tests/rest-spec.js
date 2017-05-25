@@ -1,6 +1,6 @@
 'use strict'
 
-let { rest, setUriInterceptor } = require('../')
+let { rest, follow, setUriInterceptor } = require('../')
 const service = require('./service')
 const HttpStatus = require('http-status')
 const uuid = require('uuid')
@@ -62,6 +62,16 @@ describe('Rest client', () => {
 
     expect(response.statusCode).toEqual(HttpStatus.OK)
     expect(response.body).toEqual({ name: 'Hello' })
+  }))
+
+  it('allows follow-on calls given a response', testAsync(async () => {
+    await service.start()
+    const response = await rest('http://localhost:3333/', 'go:here')
+    const nextResponse = await follow(response, 'then:here')
+    await service.stop()
+
+    expect(nextResponse.statusCode).toEqual(HttpStatus.OK)
+    expect(nextResponse.body).toEqual({ foo: 'bar' })
   }))
 
 })
