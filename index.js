@@ -18,7 +18,11 @@ function _links(...links) {
 }
 
 async function _rest(uri,...relations)  {
-  return await _next(await _request(uri), relations)
+  let auth = null
+  if(uri.hasOwnProperty('auth')) {
+    auth = uri.auth
+  }
+  return await _next(await _request(uri), relations, auth)
 }
 
 async function _follow(response, ...relations) {
@@ -35,7 +39,7 @@ async function _request(opts) {
   return await request(options)
 }
 
-async function _next(response, [current, ...next]) {
+async function _next(response, [current, ...next], auth = null) {
   if(current === undefined) {
     return response
   }
@@ -56,15 +60,19 @@ async function _next(response, [current, ...next]) {
     uri = _transformUri(uri, payload.__template)
   }
   if(matchingLink.method === 'GET') {
-    return await _next(await _request(uri), next)
+    return await _next(await _request({
+      uri,
+      auth
+    }), next, auth)
   } else {
     delete payload.__template
     return await _next(await _request({
       uri: uri,
       method: matchingLink.method,
       json: true,
-      body: payload
-    }), next)
+      body: payload,
+      auth
+    }), next, auth)
   }
 }
 

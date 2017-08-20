@@ -4,6 +4,7 @@ const express = require('express')
 const { links, link } = require('../')
 const uuid = require('uuid')
 const bodyParser = require('body-parser')
+const auth = require('basic-auth')
 
 const app = express()
 app.use(bodyParser.json())
@@ -61,6 +62,59 @@ app.get(uris.d, (request, response) => {
     .json({
       name: request.params.name
     })
+})
+
+app.get('/auth', (request, response) => {
+  if(auth(request)) {
+    response
+      .status(200)
+      .json({
+        links: links(
+          link('self', 'http://localhost:3333/auth'),
+          link('auth:here', 'http://localhost:3333/auth'+uris.a),
+          link('with:template', 'http://localhost:3333/auth'+uris.d)
+        )
+      })
+  } else {
+    console.dir(auth(request))
+    response
+      .status(401)
+      .json({})
+  }
+})
+
+app.get('/auth'+uris.a, (request, response) => {
+  if(auth(request)) {
+    response
+      .status(200)
+      .json({
+        links: links(
+          link('self', 'http://localhost:3333'+uris.a),
+          link('auth:there', 'http://localhost:3333'+uris.b),
+          link('then:post', 'http://localhost:3333'+uris.c, 'POST')
+        )
+      })
+  } else {
+    console.dir(auth(request))
+    response
+      .status(401)
+      .json({})
+  }
+})
+
+app.get('/auth'+uris.d, (request, response) => {
+  if(auth(request)) {
+    response
+      .status(200)
+      .json({
+        name: request.params.name
+      })
+  } else {
+    console.dir(auth(request))
+    response
+      .status(401)
+      .json({})
+  }
 })
 
 module.exports = {

@@ -74,4 +74,35 @@ describe('Rest client', () => {
     expect(nextResponse.body).toEqual({ foo: 'bar' })
   }))
 
+  it('allows basic auth', testAsync(async () => {
+    await service.start()
+    const auth = {
+      user: 'abc',
+      pass: 'xyz'
+    }
+    const response = await rest({
+      uri: 'http://localhost:3333/auth',
+      auth
+    })
+    await service.stop()
+
+    expect(response.statusCode).toEqual(HttpStatus.OK)
+  }))
+
+  it('remembers auth parameters for follow-on requests', testAsync(async () => {
+    await service.start()
+    const auth = {
+      user: 'abc',
+      pass: 'xyz'
+    }
+    const response = await rest({
+      uri: 'http://localhost:3333/auth',
+      auth
+    }, 'auth:here', 'auth:there')
+    await service.stop()
+
+    expect(response.statusCode).toEqual(HttpStatus.OK)
+    expect(response.body).toEqual({ foo: 'bar' })  
+  }))
+
 })
