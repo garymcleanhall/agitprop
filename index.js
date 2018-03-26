@@ -2,19 +2,21 @@
 
 const request = require('request-promise')
 
-function _link(relationship, uri, method = 'GET') {
-  return {
+function _link(relationship, uri, method = 'GET', predicate) {
+  return predicate ? {
     rel: relationship,
     uri: _uriInterceptor(uri),
     method
-  }
+  } : null
 }
 
 function _links(...links) {
-  return links.reduce((accumulator, current) => {
-    accumulator[current.rel] = { uri: current.uri, method: current.method }
-    return accumulator
-  }, {})
+  return links
+    .filter(link => !!link)
+    .reduce((accumulator, current) => {
+      accumulator[current.rel] = { uri: current.uri, method: current.method }
+      return accumulator
+    }, {})
 }
 
 async function _rest(uri,...relations)  {
