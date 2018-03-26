@@ -2,7 +2,7 @@
 
 const request = require('request-promise')
 
-function _link(relationship, uri, method = 'GET', predicate) {
+function _link(relationship, uri, method = 'GET', predicate = true) {
   return predicate ? {
     rel: relationship,
     uri: _uriInterceptor(uri),
